@@ -1,1 +1,6 @@
 hitch-env/*
+.vscode/
+deploy/
+hitch/__pycache__/
+hitch/commands/__pycache__/
+poetry.lock

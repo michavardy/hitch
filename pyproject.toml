@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "hitch"
+version = "0.1.0"
+description = "A lightweight CLI tool for syncing, deploying, and managing remote dev environments"
+authors = ["micha vardy <michavardy@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+typer = "^0.4.2"
+
+[tool.poetry.scripts]
+hitch = "hitch.cli:app"
