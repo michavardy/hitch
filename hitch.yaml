@@ -1,0 +1,10 @@
+version: 1
+remote_host: "192.168.1.100"
+ssh_user: "dev"
+ssh_key: "~/.ssh/id_rsa"
+sync:
+  local_path: "./project"
+  remote_path: "/home/dev/project"
+kubernetes:
+  namespace: "hitch"
+  deployment: "hitch-deployment.yaml"
