@@ -68,17 +68,43 @@ hitch is configured via a 'hitch.yaml' file in your project root
 
 ```yaml
 version: 1
-remote_host: "192.168.1.100"
-ssh_user: "dev"
-ssh_key: "~/.ssh/id_rsa"
-
+project_name: "test_hitch"
+images:
+  - name: "busybox"
+    image: "busybox"
+    tag: "latest"
+  - name: "hello_world"
+    dockerfile_path: "."
+    build_context: "."
+    tag: "latest"
+deployment:
+  local_directory: "./deploy"
+  remote_directory: "/opt/test_hitch"
+  cleanup_commands:
+    - "chmod +x cleanup.sh"
+    - "sh cleanup.sh"
+  install_commands:
+    - "chmod +x install.sh"
+    - "sh install.sh"
+  resources:
+    - "./resources/deployment.yaml"
+    - "./resources/services.yaml"
+remote: 
+  - name: "device"
+    host: "10.10.10.10"
+    user: "root" 
+    password: "password"
+    port: 22
+ssh_tunnels:
+  - name: "web-service"
+    local_port: 8080
+    remote_port: 8080
+  - name: "com-service"
+    local_port: 8081
+    remote_port: 8081
 sync:
   local_path: "./project"
   remote_path: "/home/dev/project"
-
-kubernetes:
-  namespace: "hitch"
-  deployment: "hitch-deployment.yaml"
 ```
 
 ---
