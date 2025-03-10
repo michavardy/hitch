@@ -10,8 +10,9 @@ import signal
 config = yaml.safe_load(Path("hitch.yaml").read_text())
 TUNNEL_PID_FILE = "ssh_tunnel_pids.txt"  # File to store PIDs
 
-def open_ssh_tunnel(ssh_host, ssh_user, ssh_password, remote_port, local_port) -> None:
+def open_ssh_tunnel(ssh_host:str, ssh_user:str, ssh_password:str, remote_port:int, local_port:int) -> None:
     try:
+        print(f"Trying to start tunnel: {ssh_host}:{remote_port} -> localhost:{local_port}")
         with SSHTunnelForwarder(
                 (ssh_host, 22),
                 ssh_username=ssh_user,
@@ -20,30 +21,25 @@ def open_ssh_tunnel(ssh_host, ssh_user, ssh_password, remote_port, local_port) -
                 remote_bind_address=('127.0.0.1', remote_port)) as server:
             server.start()
             print(f"SSH tunnel established: localhost:{local_port} -> {ssh_host}:{remote_port}")
-            try:
-                while True:
-                    server.check_tunnels()
-            except KeyboardInterrupt:
-                server.stop()
-                print(f"SSH tunnel stopped: {local_port}")
     except:
         print("Connection Failed")
+        breakpoint()
 
 def connect_ssh_tunnel() -> list[SSHTunnelForwarder]:
     processes = []
     for remote in config.get('remote',[]):
-        for command in config.get("deployment",[]).get("install_command",[]):
-            for tunnel in config.get("ssh_tunnels",[]):
-                process = multiprocessing.Process(
-                    target=open_ssh_tunnel,
-                    args=(remote['host'], remote['user'], remote['password'], tunnel['remote_port'], tunnel['local_port']),
-                    daemon=True
-                )
-                process.start()
-                processes.append(process.pid)
+        for tunnel in config.get("ssh_tunnels",[]):
+            process = multiprocessing.Process(
+                target=open_ssh_tunnel,
+                args=(remote['host'], remote['user'], remote['password'], tunnel['remote_port'], tunnel['local_port']),
+                daemon=True
+            )
+            process.start()
+            processes.append(process.pid)
     with open(TUNNEL_PID_FILE, "w") as f:
         for pid in processes:
             f.write(str(pid) + "\n")
+    breakpoint()
 def remove_ssh_tunnel():
     """Stops all running SSH tunnels by killing their PIDs."""
     if not os.path.exists(TUNNEL_PID_FILE):

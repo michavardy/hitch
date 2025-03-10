@@ -28,7 +28,7 @@ def parse_output(output:str) -> dict:
     return parsed
             
 def build_tar_files():
-    local_deployment_directory = config.get("local_deployment_directory", "./deploy")
+    local_deployment_directory = config.get("deployment",[]).get("local_directory", "./deploy")
     Path(local_deployment_directory).mkdir(exist_ok=True)
     for image in config['images']:
         image_name = f"{image['name']}"

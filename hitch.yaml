@@ -26,6 +26,13 @@ remote:
     user: "root" 
     password: "Zubur123!"
     port: 22
+ssh_tunnels:
+  - name: "web-service"
+    local_port: 8385
+    remote_port: 8384
+  - name: "com-service"
+    local_port: 22001
+    remote_port: 22000
 sync:
   local_path: "./project"
   remote_path: "/home/dev/project"

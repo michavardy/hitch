@@ -36,7 +36,7 @@ def remove_ssh_tunnel():
 
 @app.command()
 def up():
-    print("up")
+    connect_ssh_tunnel()
 
 @app.command()
 def down():

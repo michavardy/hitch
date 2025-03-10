@@ -105,7 +105,7 @@ if __name__ == "__main__":
     #for remote in config.get('remote',[]):
     #    scp_transfer_files_to_remote(
     #        name="transfer deploy", 
-    #        local_path=config.get("local_deployment_directory", "./deploy"), 
+    #        local_path=config.get('deployment',[]).get("local_directory", "./deploy"), 
     #        remote_host=remote['host'], 
     #        ssh_user=remote['user'], 
     #        password=remote['password'], 
